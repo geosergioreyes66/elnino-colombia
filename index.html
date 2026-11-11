@@ -154,6 +154,33 @@ button:focus-visible,canvas:focus-visible{outline:2px solid var(--ambar);outline
 .when .dial{width:84px}
 
 @media (max-width:900px){.controls button{white-space:nowrap;font-size:12px;padding:10px 4px;letter-spacing:-.01em}}
+
+/* cifra del mes más contenida; gráfico por destino más grande */
+.big{font-size:22px}
+.big small{font-size:.68em}
+.anom{font-size:16px;margin:2px 0 6px}
+.rows{gap:13px}
+.row{grid-template-columns:7em 1fr 4em}
+.div{height:16px}
+.div::after{top:-4px;bottom:-4px}
+
+/* en computador, panel al 90 % para que quepa entero en la pantalla */
+@media (min-width:901px){.panel{zoom:.9}.map #base{height:min(calc(100vh - 70px),980px)}}
+
+/* gráfico por destino más grande para llenar el panel */
+.rows{gap:20px;font-size:17px}
+.div{height:24px}
+.row{grid-template-columns:7.2em 1fr 4em}
+.leyenda{margin-top:10px}
+.leyenda .barra{height:12px}
+
+/* cifra frente a lo normal y déficit más legibles; gráfico por destino más abajo */
+.anom{font-size:21px;margin:4px 0 8px}
+.def{font-size:17px}
+@media (min-width:901px){.datos{gap:34px}.rows{gap:24px}.leyenda{margin-top:22px}}
+
+/* etiqueta del periodo más grande */
+.when .per{font-size:19px;letter-spacing:.1em}
 </style>
 
 </head>
@@ -284,16 +311,16 @@ function drawRivers(t){if(!ready)return;const k0=Math.floor(t),k1=Math.min(P.b-1
 
 // ---- barras mensuales del periodo
 const tl=$('tl'),tg=tl.getContext('2d'),TW=760,TH=330,TP=16;
-function xK(k){const n=P.b-P.a;return TP+(k-P.a+0.5)*(TW-2*TP)/n}
+const TL=104;function xK(k){const n=P.b-P.a;return TL+(k-P.a+0.5)*(TW-TL-TP)/n}
 function yA(a){const top=16,h=TH-62;return top+h*(1-(Math.max(-0.8,Math.min(0.8,a))+0.8)/1.6)}
-function drawTL(kc){tg.clearRect(0,0,TW,TH);const y0=yA(0),bw=(TW-2*TP)/(P.b-P.a)*0.62;
+function drawTL(kc){tg.clearRect(0,0,TW,TH);const y0=yA(0),bw=(TW-TL-TP)/(P.b-P.a)*0.62;
   tg.font='600 31px Big Shoulders Display, Bahnschrift, sans-serif';
-  [[0.5,'+50 %'],[-0.5,'−50 %']].forEach(([a,l])=>{tg.strokeStyle='#232724';tg.lineWidth=1;tg.beginPath();tg.moveTo(TP,yA(a));tg.lineTo(TW-TP,yA(a));tg.stroke();tg.fillStyle='#8A847B';tg.textAlign='left';tg.fillText(l,TP+4,yA(a)-6)});
+  [[0.5,'+50 %'],[-0.5,'−50 %']].forEach(([a,l])=>{tg.strokeStyle='#232724';tg.lineWidth=1;tg.beginPath();tg.moveTo(TL,yA(a));tg.lineTo(TW-TP,yA(a));tg.stroke();tg.fillStyle='#8A847B';tg.textAlign='right';tg.fillText(l,TL-10,yA(a)+10)});
   for(let k=P.a;k<P.b;k++){const a=sum(C[k].real)/sum(C[k].normal)-1,x=xK(k),y=yA(a);
     tg.fillStyle=a<0?(a<-0.25?'#FF1FB4':'#FFE81F'):'#39FF14';tg.globalAlpha=k===kc?1:0.55;tg.fillRect(x-bw/2,Math.min(y,y0),bw,Math.max(2,Math.abs(y-y0)));
-    tg.globalAlpha=1;const {m,y:yy}=mesDe(k);tg.fillStyle=k===kc?'#F3F0EA':'#8A847B';tg.textAlign='center';tg.fillText(ABR[m]+(m===0||k===P.a?' '+String(yy).slice(2):''),x,TH-14);
+    tg.globalAlpha=1;const {m,y:yy}=mesDe(k);tg.font='600 25px Big Shoulders Display, Bahnschrift, sans-serif';tg.fillStyle=k===kc?'#F3F0EA':'#8A847B';tg.textAlign='center';tg.fillText(ABR[m]+(m===0||k===P.a?' '+String(yy).slice(2):''),x,TH-14);
     if(k===kc){tg.strokeStyle='#F3F0EA';tg.lineWidth=2;tg.strokeRect(x-bw/2-4,Math.min(y,y0)-4,bw+8,Math.max(2,Math.abs(y-y0))+8)}}
-  tg.strokeStyle='#F3F0EA';tg.lineWidth=2;tg.beginPath();tg.moveTo(TP,y0);tg.lineTo(TW-TP,y0);tg.stroke();tg.fillStyle='#F3F0EA';tg.textAlign='left';tg.fillText('normal',TP+4,y0-6)}
+  tg.font='600 31px Big Shoulders Display, Bahnschrift, sans-serif';tg.strokeStyle='#F3F0EA';tg.lineWidth=2;tg.beginPath();tg.moveTo(TL,y0);tg.lineTo(TW-TP,y0);tg.stroke();tg.fillStyle='#F3F0EA';tg.textAlign='right';tg.fillText('normal',TL-10,y0+10)}
 
 let shown=-1;
 function setFrame(t){drawRivers(t);const k=Math.min(P.b-1,Math.floor(t)+(ease(t-Math.floor(t))>0.5?1:0));if(k===shown)return;shown=k;
@@ -302,7 +329,7 @@ function setFrame(t){drawRivers(t);const k=Math.min(P.b-1,Math.floor(t)+(ease(t-
   $('tot').innerHTML=fmt(sum(C[k].real))+'<small>m³/s en promedio</small>';$('totA').textContent=pct(a)+' frente a lo normal';$('totA').style.color=colorA(a);
   let acc=0;for(let j=P.a;j<=k;j++)acc+=C[j].km;
   $('def').innerHTML=(acc<0?'Déficit':'Exceso')+' acumulado desde '+C[P.a].e+': <b>'+fmt(Math.abs(acc))+' km³</b>';
-  DEST.forEach(([n,b])=>{const ab=C[k].real[b]/C[k].normal[b]-1,w=Math.min(50,Math.abs(ab)*50);const i=$('b'+b);
+  DEST.forEach(([n,b])=>{const ab=C[k].real[b]/C[k].normal[b]-1,w=Math.min(50,Math.abs(ab)/0.6*50);const i=$('b'+b);
     i.style.left=ab<0?(50-w)+'%':'50%';i.style.width=w+'%';i.style.background=colorA(ab);$('v'+b).textContent=pct(ab);$('v'+b).style.color=colorA(ab)})}
 
 let t=0,playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,last=performance.now();
@@ -311,7 +338,7 @@ function setPeriodo(p){P=periodo(p);$('pA').setAttribute('aria-pressed',!p);$('p
 $('pA').onclick=()=>setPeriodo(0);$('pB').onclick=()=>setPeriodo(1);
 $('play').onclick=()=>{playing=!playing;$('play').textContent=playing?'Pausa':'Reproducir'};
 function seek(e){const r=tl.getBoundingClientRect();const fx=(e.clientX-r.left)/r.width*TW;const n=P.b-P.a;
-  t=Math.max(P.a,Math.min(P.b-1,P.a+Math.floor((fx-TP)/((TW-2*TP)/n))));shown=-1;setFrame(t)}
+  t=Math.max(P.a,Math.min(P.b-1,P.a+Math.floor((fx-TL)/((TW-TL-TP)/n))));shown=-1;setFrame(t)}
 tl.addEventListener('pointerdown',e=>{seek(e);playing=false;$('play').textContent='Reproducir'});
 tl.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();const k=Math.max(P.a,Math.min(P.b-1,Math.floor(t+0.5)+(e.key==='ArrowRight'?1:-1)));t=k;shown=-1;setFrame(t)}});
 try{const u=new URLSearchParams(location.search);if(u.get('limpio'))document.querySelectorAll('.when,.leyenda').forEach(e=>e.style.display='none');
