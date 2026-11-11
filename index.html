@@ -113,6 +113,18 @@ button:focus-visible,canvas:focus-visible{outline:2px solid var(--ambar);outline
   .mini{display:block;flex-basis:100%;text-align:center;font-family:var(--rotulo);font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:var(--hueso)}
   .wrap{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 }
+
+/* ajustes del panel y del texto inferior */
+.big{font-size:clamp(26px,2.2vw,32px)}
+.big small{font-size:.5em}
+.anom{font-size:clamp(17px,1.5vw,20px);margin:2px 0 6px}
+.def{font-size:14px}
+.when > .date{font-size:clamp(20px,2vw,26px)}
+#tl{height:150px}
+.abajo{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(20px,3vw,48px);align-items:start;border-top:1px solid var(--filete);padding-top:20px}
+.abajo .note,.abajo .autor{max-width:none}
+.abajo .autor{border-top:0;padding-top:0}
+@media (max-width:900px){.abajo{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -133,7 +145,7 @@ button:focus-visible,canvas:focus-visible{outline:2px solid var(--ambar);outline
     <button id="pB" type="button" aria-pressed="false">2026 hasta hoy</button>
     <button id="play" type="button">Pausa</button>
   </div>
-        <div class="tlbox"><p class="lab">Toca un mes</p><canvas id="tl" width="760" height="230" tabindex="0" aria-label="Anomalía mensual del agua que genera Colombia en el periodo elegido; flechas para moverse por meses"></canvas></div>
+        <div class="tlbox"><p class="lab">Toca un mes</p><canvas id="tl" width="760" height="330" tabindex="0" aria-label="Anomalía mensual del agua que genera Colombia en el periodo elegido; flechas para moverse por meses"></canvas></div>
         <div class="datos">
       <div>
         <p class="lab">Agua que genera Colombia · promedio del mes</p>
@@ -152,6 +164,7 @@ button:focus-visible,canvas:focus-visible{outline:2px solid var(--ambar);outline
     <div class="foot">Caudal: GloFAS v4.0 (Copernicus CEMS, ECMWF), consolidado 2013–2024 e intermedio 2026 · Red: LDD de GloFAS v4 · Relieve: ETOPO1 (NOAA) · Frontera: Natural Earth</div>
   </section>
 
+  <div class="abajo">
   <p class="note">En el último El Niño (junio de 2023 a mayo de 2024) el agua que generó Colombia corrió en promedio <strong>20 % por debajo de lo normal</strong> y el peor mes fue <strong>marzo de 2024, con −38 %</strong>. La cuenca más golpeada fue la del <strong>Orinoco: −46 % en promedio</strong>. En 2026, enero y febrero fueron húmedos, pero <strong>desde marzo todos los meses han ido por debajo de lo normal</strong>, entre −7 % y −25 %, con lo más fuerte de El Niño todavía por llegar. Cada río se compara con su propio caudal normal de ese mes (promedio 2013–2022 de GloFAS). Noviembre de 2026 va hasta el día 7. "Agua que genera Colombia" es lo que sale del país por cada destino menos lo que entra desde los vecinos. Son caudales modelados con LISFLOOD, no aforados; los de 2026 son del producto intermedio de GloFAS, que aún puede corregirse.</p>
   <section class="autor" aria-label="Quién hizo este análisis">
     <p class="lab">Quién hizo este análisis</p>
@@ -159,6 +172,7 @@ button:focus-visible,canvas:focus-visible{outline:2px solid var(--ambar);outline
     <p class="contacto"><a href="https://origenix.com.co" target="_blank" rel="noopener">origenix.com.co</a><span>contacto@origenix.com.co</span></p>
     <p class="lema">Evidencia para decisiones que generan valor.</p>
   </section>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -240,7 +254,7 @@ function drawRivers(t){if(!ready)return;const k0=Math.floor(t),k1=Math.min(P.b-1
   hwAttr.needsUpdate=true;renderer.render(scene,cam);GL.forEach((c,i)=>{GX[i].clearRect(0,0,c.width,c.height);GX[i].drawImage(cv,0,0,c.width,c.height)})}
 
 // ---- barras mensuales del periodo
-const tl=$('tl'),tg=tl.getContext('2d'),TW=760,TH=230,TP=16;
+const tl=$('tl'),tg=tl.getContext('2d'),TW=760,TH=330,TP=16;
 function xK(k){const n=P.b-P.a;return TP+(k-P.a+0.5)*(TW-2*TP)/n}
 function yA(a){const top=16,h=TH-62;return top+h*(1-(Math.max(-0.8,Math.min(0.8,a))+0.8)/1.6)}
 function drawTL(kc){tg.clearRect(0,0,TW,TH);const y0=yA(0),bw=(TW-2*TP)/(P.b-P.a)*0.62;
