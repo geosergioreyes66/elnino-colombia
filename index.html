@@ -139,6 +139,21 @@ button:focus-visible,canvas:focus-visible{outline:2px solid var(--ambar);outline
 .rows{font-size:15px;gap:9px}
 .leyenda{font-size:13px}
 .controls button{font-size:14px}
+
+/* fecha estable: rótulo arriba, mes debajo sin partirse; botones algo más pequeños */
+.when{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:12px;row-gap:2px;align-items:end}
+.when .per{grid-column:1;grid-row:1;font-size:15px;letter-spacing:.12em;white-space:nowrap}
+.when > .date{grid-column:1;grid-row:2;font-size:19px;letter-spacing:.05em;white-space:nowrap;line-height:1.1}
+.when .dial{grid-column:2;grid-row:1 / span 2;width:52px}
+.controls{gap:6px}
+.controls button{font-size:13px;padding:7px 14px}
+
+/* título más compacto y reloj del año más grande */
+.panel h1{font-size:clamp(22px,1.9vw,27px);line-height:1.08}
+.panel .kicker{font-size:12px;letter-spacing:.12em}
+.when .dial{width:84px}
+
+@media (max-width:900px){.controls button{white-space:nowrap;font-size:12px;padding:10px 4px;letter-spacing:-.01em}}
 </style>
 
 </head>
